@@ -1,4 +1,5 @@
 #include "GameScene.h"
+#include "Mymath.h"
 #include "TextureManager.h"
 #include <cassert>
 
@@ -12,13 +13,25 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 	model_.reset(Model::Create());
 	viewprojection_.Initialize();
+	viewprojection_.farZ = 1400.0f;
 	textureHandle_ = TextureManager::Load("cube/cube.jpg");
 	player_ = std::make_unique<Player>();
 	player_->Initialize(model_.get(), textureHandle_);
+	//Skydome
+	modelskydome_ = Model::CreateFromOBJ("skydome",true);
+	skydome_ = std::make_unique<Skydome>();
+	skydome_->Initialize(modelskydome_);
+
+	//Ground
+	modelground_ = Model::CreateFromOBJ("ground", true);
+	ground_ = std::make_unique<Ground>();
+	ground_->Initialize(modelground_);
 }
 
 void GameScene::Update() {
 	player_->Update();
+	skydome_->Update();
+	ground_->Update();
 	viewprojection_.UpdateMatrix();
 }
 
@@ -50,7 +63,9 @@ void GameScene::Draw() {
 	/// </summary>
 	player_->Draw(viewprojection_);
 
+	skydome_->Draw(viewprojection_);
 
+	ground_->Draw(viewprojection_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
