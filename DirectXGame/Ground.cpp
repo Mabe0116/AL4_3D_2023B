@@ -6,9 +6,9 @@ void Ground::Initialize(Model* model) {
 	model_ = model;
     worldTransform_.Initialize();
     worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
-    worldTransform_.scale_.x = 100;
-    worldTransform_.scale_.y = 100;
-    worldTransform_.scale_.z = 100;
+    worldTransform_.scale_.x = 1;
+    worldTransform_.scale_.y = 1;
+    worldTransform_.scale_.z = 1;
 
 }
 

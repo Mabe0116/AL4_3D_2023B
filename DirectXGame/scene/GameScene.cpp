@@ -14,6 +14,7 @@ void GameScene::Initialize() {
 	model_.reset(Model::Create());
 	viewprojection_.Initialize();
 	viewprojection_.farZ = 1400.0f;
+	viewprojection_.translation_.y = 5.0f;
 	textureHandle_ = TextureManager::Load("cube/cube.jpg");
 	player_ = std::make_unique<Player>();
 	player_->Initialize(model_.get(), textureHandle_);
