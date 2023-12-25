@@ -94,7 +94,7 @@ void Player::Move(){
 		move.y = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
 
 		//移動
-		worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+		Add(worldTransform_.translation_, move);
 
 		//// 押した方向で移動ベクトルを変更(左右)
 		// if (input_->PushKey(DIK_LEFT)) {
