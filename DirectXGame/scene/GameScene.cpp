@@ -33,6 +33,7 @@ void GameScene::Update() {
 	player_->Update();
 	skydome_->Update();
 	ground_->Update();
+
 	viewprojection_.UpdateMatrix();
 }
 
