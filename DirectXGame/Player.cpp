@@ -27,31 +27,6 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	return result;
 }
 
-Matrix4x4 MakeRotateYMatrix(float radian) {
-	Matrix4x4 result;
-	result.m[0][0] = std::cos(radian);
-	result.m[0][1] = 0;
-	result.m[0][2] = -std::sin(radian);
-	result.m[0][3] = 0;
-
-	result.m[1][0] = 0;
-	result.m[1][1] = 1;
-	result.m[1][2] = 0;
-	result.m[1][3] = 0;
-
-	result.m[2][0] = std::sin(radian);
-	result.m[2][1] = 0;
-	result.m[2][2] = std::cos(radian);
-	result.m[2][3] = 0;
-
-	result.m[3][0] = 0;
-	result.m[3][1] = 0;
-	result.m[3][2] = 0;
-	result.m[3][3] = 1;
-
-	return result;
-}
-
 void Player::Initialize(Model* model, uint32_t textureHandle) {
 	assert(model);
 	model_ = model;
@@ -64,6 +39,8 @@ void Player::Update() {
 	worldTransform_.TransferMatrix();
 	//行列の更新
 	worldTransform_.UpdateMatrix();
+
+	Move();
 };
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -81,11 +58,13 @@ void Player::Move(){
 	XINPUT_STATE joyState;
 
 	// ジョイスティック状態取得
-	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		
 		// 移動量
 		move.x = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
-		move.y = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+		move.y = 0.0f;
+		move.z = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+
 
 		//移動
 		Add(worldTransform_.translation_, move);

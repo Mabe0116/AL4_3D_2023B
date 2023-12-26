@@ -150,6 +150,15 @@ void Add(Vector3& v1, Vector3& v2) {
 	v1.x += v2.x;
 	v1.y += v2.y;
 	v1.z += v2.z;
+	
+}
+
+Vector3 Add(const Vector3& v1, const Vector3& v2) {
+	Vector3 result;
+	result.x = v1.x + v2.x;
+	result.y = v1.y + v2.y;
+	result.z = v1.z + v2.z;
+	return result;
 }
 
 void Move(Vector3& transform, Vector3& move) {
@@ -303,6 +312,31 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	result.x /= w;
 	result.y /= w;
 	result.z /= w;
+
+	return result;
+}
+
+Matrix4x4 MakeRotateYMatrix(float radian) {
+	Matrix4x4 result;
+	result.m[0][0] = std::cos(radian);
+	result.m[0][1] = 0;
+	result.m[0][2] = -std::sin(radian);
+	result.m[0][3] = 0;
+
+	result.m[1][0] = 0;
+	result.m[1][1] = 1;
+	result.m[1][2] = 0;
+	result.m[1][3] = 0;
+
+	result.m[2][0] = std::sin(radian);
+	result.m[2][1] = 0;
+	result.m[2][2] = std::cos(radian);
+	result.m[2][3] = 0;
+
+	result.m[3][0] = 0;
+	result.m[3][1] = 0;
+	result.m[3][2] = 0;
+	result.m[3][3] = 1;
 
 	return result;
 }

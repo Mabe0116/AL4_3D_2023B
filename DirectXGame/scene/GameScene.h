@@ -11,6 +11,7 @@
 #include <memory>
 #include <Skydome.h>
 #include <Ground.h>
+#include "FollowCamera.h"
 
 
 /// <summary>
@@ -64,6 +65,7 @@ private: // メンバ変数
 	std::unique_ptr<Model> model_ = nullptr;
 	std::unique_ptr<Player> player_ = nullptr;
 	
+	std::unique_ptr<FollowCamera> followcamera_ = nullptr;
 
 	uint32_t textureHandle_;
 };

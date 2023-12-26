@@ -27,6 +27,10 @@ void GameScene::Initialize() {
 	modelground_ = Model::CreateFromOBJ("ground", true);
 	ground_ = std::make_unique<Ground>();
 	ground_->Initialize(modelground_);
+
+	followcamera_ = std::make_unique<FollowCamera>();
+	followcamera_->Initialize();
+	followcamera_->SetTarget(player_->GetWorldTransform());
 }
 
 void GameScene::Update() {
