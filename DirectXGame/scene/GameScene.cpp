@@ -30,15 +30,19 @@ void GameScene::Initialize() {
 
 	followcamera_ = std::make_unique<FollowCamera>();
 	followcamera_->Initialize();
-	followcamera_->SetTarget(player_->GetWorldTransform());
+	followcamera_->SetTarget(&player_->GetWorldTransform());
 }
 
 void GameScene::Update() {
 	player_->Update();
 	skydome_->Update();
 	ground_->Update();
+	followcamera_->Update();
+	viewprojection_.matView = followcamera_->GetViewProjection().matView;
 
+	viewprojection_.matProjection = followcamera_->GetViewProjection().matProjection;
 	viewprojection_.UpdateMatrix();
+
 }
 
 void GameScene::Draw() {

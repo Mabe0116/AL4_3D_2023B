@@ -8,7 +8,7 @@ public:
 	void Initialize(Model* model, uint32_t textureHandle);
 	void Update();
 	void Draw(const ViewProjection& viewProjection);
-	WorldTransform GetWorldTransform() { 
+	const WorldTransform& GetWorldTransform() { 
 		return worldTransform_;
 	}
 
