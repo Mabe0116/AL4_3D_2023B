@@ -62,7 +62,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle) {
 
 void Player::Update() {
 	worldTransform_.TransferMatrix();
-	//s—ñ‚ÌXV
+	//è¡Œåˆ—ã®æ›´æ–°
 	worldTransform_.UpdateMatrix();
 };
 
@@ -71,39 +71,33 @@ void Player::Draw(const ViewProjection& viewProjection) {
 }
 
 void Player::Move(){
-	// ƒLƒƒƒ‰ƒNƒ^[‚ÌˆÚ“®ƒxƒNƒgƒ‹
+	// ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«
 	Vector3 move = {0, 0, 0};
 
-	// ƒLƒƒƒ‰ƒNƒ^[‚ÌˆÚ“®‚Ì‘¬‚³
+	// ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®ç§»å‹•ã®é€Ÿã•
 	const float kCharacterSpeed = 0.2f;
 
-	// ƒQ[ƒ€ƒpƒbƒh‚Ìó‘Ô‚ð“¾‚é•Ï”
+	// ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰ã®çŠ¶æ…‹ã‚’å¾—ã‚‹å¤‰æ•°
 	XINPUT_STATE joyState;
 
-	// ƒWƒ‡ƒCƒXƒeƒBƒbƒNó‘ÔŽæ“¾
+	// ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯çŠ¶æ…‹å–å¾—
 	if (!Input::GetInstance()->GetJoystickState(0, joyState)) {
-
-		// ‘¬‚³
-		const float speed = 0.3f;
-
-		// Ž©‹@ˆÚ“®ˆ—
-		// Move(worldTransform_.translation_, move);
 		
-		// ˆÚ“®—Ê
+		// ç§»å‹•é‡
 		move.x = (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
 		move.y = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
 
-		//ˆÚ“®
+		//ç§»å‹•
 		Add(worldTransform_.translation_, move);
 
-		//// ‰Ÿ‚µ‚½•ûŒü‚ÅˆÚ“®ƒxƒNƒgƒ‹‚ð•ÏX(¶‰E)
+		//// æŠ¼ã—ãŸæ–¹å‘ã§ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’å¤‰æ›´(å·¦å³)
 		// if (input_->PushKey(DIK_LEFT)) {
 		//	move.x -= kCharacterSpeed;
 		// } else if (input_->PushKey(DIK_RIGHT)) {
 		//	move.x += kCharacterSpeed;
 		// }
 
-		//// ‰Ÿ‚µ‚½•ûŒü‚ÅˆÚ“®ƒxƒNƒgƒ‹‚ð•ÏX(ã‰º)
+		//// æŠ¼ã—ãŸæ–¹å‘ã§ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’å¤‰æ›´(ä¸Šä¸‹)
 		// if (input_->PushKey(DIK_UP)) {
 		//	move.y += kCharacterSpeed;
 		// }
