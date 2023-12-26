@@ -7,6 +7,7 @@ void FollowCamera::Initialize() {
 	viewProjection_.Initialize(); 
 	input_ = Input::GetInstance();
 	rotateSpeed_ = 0.01f;
+	viewProjection_.farZ = 1200;
 }
 
 void FollowCamera::Update() { 

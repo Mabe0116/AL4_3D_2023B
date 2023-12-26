@@ -41,7 +41,7 @@ void GameScene::Update() {
 	viewprojection_.matView = followcamera_->GetViewProjection().matView;
 
 	viewprojection_.matProjection = followcamera_->GetViewProjection().matProjection;
-	viewprojection_.UpdateMatrix();
+	viewprojection_.TransferMatrix();
 
 }
 
