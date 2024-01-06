@@ -27,11 +27,11 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	return result;
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle) {
+void Player::Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, Model* modelR_arm) {
 	assert(model);
 	model_ = model;
 	worldTransform_.Initialize();
-	textureHandle_ = textureHandle;
+	/*textureHandle_ = textureHandle;*/
 	input_ = Input::GetInstance();
 };
 
@@ -86,3 +86,28 @@ void Player::Move(){
 		// }
 	}
 };
+
+void Player::InitializeFloatingGimmick(){ 
+	floatingParameter_ = 0.0f;
+}
+
+void Player::UpdateFloatingGimmick() {
+	//浮遊移動のサイクル＜frame＞
+	const uint16_t;
+
+	//1フレームでのパラメータ加算地
+	const float;
+
+	//パラメータを1ステップ分加算
+	floatingParameter_ += ;
+
+	//2πを超えたらΘに戻す
+	floatingParameter_ = syd::fmod(floatingParameter_, 2.0f *);
+
+	//浮遊の振幅<m>
+	const float = ;
+
+	//浮遊を座標の反映
+	worldTransformBody_.translation_.y = std::sin(floatingParameter_)*;
+
+}
