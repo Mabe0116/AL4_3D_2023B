@@ -2,12 +2,15 @@
 
 #include "Audio.h"
 #include "DirectXCommon.h"
+#include "FollowCamera.h"
 #include "Input.h"
 #include "Model.h"
+#include "Player.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
-#include "Player.h"
+#include <Ground.h>
+#include <Skydome.h>
 #include <memory>
 
 /// <summary>
@@ -46,12 +49,28 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 
+	WorldTransform worldTransform_;
+
+	std::unique_ptr<Skydome> skydome_ = nullptr;
+	Model* modelskydome_ = nullptr;
+
+	std::unique_ptr<Ground> ground_ = nullptr;
+	Model* modelground_ = nullptr;
+
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
 	ViewProjection viewprojection_;
 	std::unique_ptr<Model> model_ = nullptr;
 	std::unique_ptr<Player> player_ = nullptr;
+
+	// 3dモデル
+	std::unique_ptr<Model> modelFighterBody_;
+	std::unique_ptr<Model> modelFighterHead_;
+	std::unique_ptr<Model> modelFighterL_arm_;
+	std::unique_ptr<Model> modelFighterR_arm_;
+
+	std::unique_ptr<FollowCamera> followcamera_ = nullptr;
 
 	uint32_t textureHandle_;
 };
