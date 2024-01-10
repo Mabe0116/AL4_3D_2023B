@@ -12,7 +12,7 @@ public:
 		return worldTransform_;
 	}
 
-	//•‚—VƒMƒ~ƒbƒN‰Šú‰»
+	//æµ®éŠã‚®ãƒŸãƒƒã‚¯åˆæœŸåŒ–
 	void InitializeFloatingGimmick();
 
 	void UpdateFloatingGimmick();
@@ -23,17 +23,20 @@ private:
 private:
 	Model* model_ = nullptr;
 
-	//3dƒ‚ƒfƒ‹
+	//3dãƒ¢ãƒ‡ãƒ«
 	Model* modelFighterBody_;
 	Model* modelFighterHead_;
 	Model* modelFighterL_arm_;
 	Model* modelFighterR_arm_;
 
 	WorldTransform worldTransform_;
+	WorldTransform worldTransformBody_;
+	WorldTransform worldTransformL_arm_;
+	WorldTransform worldTransformR_arm_;
 	uint32_t textureHandle_;
 	Input* input_ = nullptr;
 
-	//•‚—VƒMƒ~ƒbƒN‚Ì”}‰î•Ï”
+	//æµ®éŠã‚®ãƒŸãƒƒã‚¯ã®åª’ä»‹å¤‰æ•°
 	float floatingParameter_ = 0.0f;
 
 };

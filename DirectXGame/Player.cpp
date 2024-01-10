@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <cassert>
 #include "Mymath.h"
+#include "ImGuiManager.h"
 
 Matrix4x4 MakeRotateXMatrix(float radian) {
 	Matrix4x4 result;
@@ -28,9 +29,13 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 }
 
 void Player::Initialize(Model* modelBody, Model* modelHead, Model* modelL_arm, Model* modelR_arm) {
-	assert(model);
-	model_ = model;
+	assert(modelBody);
+	/*model_ = model;*/
 	worldTransform_.Initialize();
+	worldTransformBody_.Initialize();
+	worldTransformL_arm_.Initialize();
+	worldTransformR_arm_.Initialize();
+
 	/*textureHandle_ = textureHandle;*/
 	input_ = Input::GetInstance();
 };
@@ -93,21 +98,35 @@ void Player::InitializeFloatingGimmick(){
 
 void Player::UpdateFloatingGimmick() {
 	//浮遊移動のサイクル＜frame＞
-	const uint16_t;
+	const uint16_t period = 60;
 
 	//1フレームでのパラメータ加算地
-	const float;
+	const float step = 2.0f * 3.14f / period;
 
 	//パラメータを1ステップ分加算
-	floatingParameter_ += ;
+	floatingParameter_ += step;
 
 	//2πを超えたらΘに戻す
-	floatingParameter_ = syd::fmod(floatingParameter_, 2.0f *);
+	floatingParameter_ = std::fmod(floatingParameter_, 2.0f * 3.14f);
 
 	//浮遊の振幅<m>
-	const float = ;
+	const float floatingAmplitude = 0.125f;
 
 	//浮遊を座標の反映
-	worldTransformBody_.translation_.y = std::sin(floatingParameter_)*;
+	worldTransformBody_.translation_.y =
+	    std::sin(floatingParameter_) * floatingAmplitude;
+
+	worldTransformL_arm_.translation_.z =
+		std::sin(floatingParameter_) * floatingAmplitude;
+
+	worldTransformR_arm_.translation_.z =
+		std::sin(floatingParameter_) * -floatingAmplitude;
+
+	ImGui::Begin("Player");
+	ImGui::SliderFloat3("Body Translation", &worldTransformBody_.translation_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat3("ArmL Translation", &worldTransformL_arm_.translation_.x, -10.0f, 10.0f);
+	ImGui::SliderFloat3("ArmR Translation", &worldTransformR_arm_.translation_.x, -10.0f, 10.0f);
+	ImGui::End();
+
 
 }
