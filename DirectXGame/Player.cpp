@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "PlayerBullet.h"
 #include <cassert>
 #include "Mymath.h"
 #include "ImGuiManager.h"
@@ -28,8 +29,17 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	return result;
 }
 
-void Player::Initialize(Model* modelBody,Model* modelHead, Model* modelL_arm, Model* modelR_arm) {
+Player::~Player() {
+	// bullet_の解放
+	for (PlayerBullet* bullet : bullets_) {
+		delete bullet;
+	}
+}
+
+
+void Player::Initialize(Model* modelBody,Model* modelHead, Model* modelL_arm, Model* modelR_arm,Model* PlayerBullet) {
 	assert(modelBody);
+	assert(PlayerBullet);
 	/*model_ = model;*/
 	worldTransform_.Initialize();
 	worldTransformBody_.Initialize();
@@ -45,6 +55,8 @@ void Player::Initialize(Model* modelBody,Model* modelHead, Model* modelL_arm, Mo
 	modelFighterHead_ = modelHead;
 	modelFighterL_arm_ = modelL_arm;
 	modelFighterR_arm_ = modelR_arm;
+	
+	ModelPlayerBullet_ = PlayerBullet;
 
 	worldTransformBody_.parent_ = &worldTransform_;
 	worldTransformHead_.parent_ = &worldTransformBody_;
@@ -66,9 +78,46 @@ void Player::Update() {
 	worldTransformL_arm_.UpdateMatrix();
 	worldTransformR_arm_.UpdateMatrix();
 
+	
+	// デスフラグの立った弾を削除
+	bullets_.remove_if([](PlayerBullet* bullet) {
+		if (bullet->IsDead()) {
+			delete bullet;
+			return true;
+		}
+		return false;
+	});
+
+	// キャラクターの移動ベクトル
+	Vector3 move = {0, 0, 0};
+
+	// キャラクターの移動の速さ
+	const float kCharacterSpeed = 0.2f;
+
+	// ゲームパッドの状態を得る変数
+	XINPUT_STATE joyState;
+
+	// ゲームパッド状態取得
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+
+		move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
+
+		move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+	}
+
 	UpdateFloatingGimmick();
 
 	Move();
+
+	//キャラクターの攻撃処理
+	Attack();
+
+	//弾更新
+	for (PlayerBullet* bullet : bullets_)
+	{
+		bullet->Update();
+	}
+
 };
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -76,6 +125,11 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	modelFighterHead_->Draw(worldTransformHead_, viewProjection);
 	modelFighterL_arm_->Draw(worldTransformL_arm_, viewProjection);
 	modelFighterR_arm_->Draw(worldTransformR_arm_, viewProjection);
+
+	// 弾描画
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw(viewProjection);
+	}
 }
 
 void Player::Move(){
@@ -155,5 +209,54 @@ void Player::UpdateFloatingGimmick() {
 	ImGui::SliderFloat3("ArmR Translation", &worldTransformR_arm_.translation_.x, -10.0f, 10.0f);
 	ImGui::End();
 
+
+}
+
+void Player::Attack() {
+
+	XINPUT_STATE joyState;
+
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			if (--BulletTimer < 0) {
+				BulletTimer = 30;
+
+				// 弾の速度
+				const float kBulletSpeed = 1.0f;
+				Vector3 velocity(0, 0, kBulletSpeed);
+
+				Vector3 N = Normalize(velocity);
+
+				velocity.x = N.x * kBulletSpeed;
+
+				velocity.y = N.y * kBulletSpeed;
+
+				velocity.z = N.z * kBulletSpeed;
+
+				// 弾を生成し、初期化
+				PlayerBullet* newBullet = new PlayerBullet();
+				Vector3 position = GetWorldPosition();
+				position.y = 1.0f;
+				newBullet->Initialize(ModelPlayerBullet_,position, velocity);
+
+				// 弾を登録する
+				bullets_.push_back(newBullet);
+			}
+		}
+	}
+}
+
+Vector3 Player::GetWorldPosition() {
+	// ワールド座標を入れる変数
+	Vector3 worldPos;
+	// ワールド行列の平行移動成分を取得(ワールド座標)
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+
+void Player::OnCollision() {
 
 }

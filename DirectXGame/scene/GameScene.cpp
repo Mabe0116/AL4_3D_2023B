@@ -5,7 +5,7 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() { delete ModelPlayerBullet_; }
 
 void GameScene::Initialize() {
 	dxCommon_ = DirectXCommon::GetInstance();
@@ -16,6 +16,8 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head"));
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm"));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm"));
+	ModelPlayerBullet_ = Model::CreateFromOBJ("PlayerBullet", true);
+
 	viewprojection_.Initialize();
 	viewprojection_.farZ = 1400.0f;
 	viewprojection_.translation_.y = 5.0f;
@@ -23,7 +25,9 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize(
 	    modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(),
-	    modelFighterR_arm_.get());
+	    modelFighterR_arm_.get(),ModelPlayerBullet_);
+	
+
 	// Skydome
 	modelskydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = std::make_unique<Skydome>();

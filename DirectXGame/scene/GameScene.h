@@ -70,6 +70,9 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelFighterL_arm_;
 	std::unique_ptr<Model> modelFighterR_arm_;
 
+	Model* ModelPlayer_ = nullptr;
+	Model* ModelPlayerBullet_ = nullptr;
+
 	std::unique_ptr<FollowCamera> followcamera_ = nullptr;
 
 	uint32_t textureHandle_;
