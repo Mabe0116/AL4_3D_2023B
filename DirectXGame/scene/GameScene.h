@@ -6,12 +6,14 @@
 #include "Input.h"
 #include "Model.h"
 #include "Player.h"
+#include "Balloon.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <Ground.h>
 #include <Skydome.h>
 #include <memory>
+#include <random>
 
 /// <summary>
 /// ゲームシーン
@@ -44,6 +46,14 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	void AddEnemy(Vector3 pos);
+
+	void CheckAllCollision();
+
+	bool GetChangeScene() { return ChangeScene; };
+
+	void Reset();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
@@ -73,7 +83,20 @@ private: // メンバ変数
 	Model* ModelPlayer_ = nullptr;
 	Model* ModelPlayerBullet_ = nullptr;
 
+	Model* balloon = nullptr;
+
+	std::list<Balloon*> balloon_;
+
 	std::unique_ptr<FollowCamera> followcamera_ = nullptr;
 
+	
+	bool ChangeScene = false;
+	int32_t NextScene = 0;
+
+
 	uint32_t textureHandle_;
+
+	uint32_t hitCount_ = 0;
+
+	std::mt19937 randomEngine;
 };

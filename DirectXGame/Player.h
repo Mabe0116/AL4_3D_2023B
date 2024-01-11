@@ -24,6 +24,8 @@ public:
 
 	void UpdateFloatingGimmick();
 
+	void Reset();
+
 	~Player();
 
 private:

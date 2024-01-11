@@ -260,3 +260,12 @@ Vector3 Player::GetWorldPosition() {
 void Player::OnCollision() {
 
 }
+
+void Player::Reset() {
+	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
+	for (PlayerBullet* bullet : bullets_)
+	{
+		delete bullet;
+	}
+	bullets_.clear();
+}

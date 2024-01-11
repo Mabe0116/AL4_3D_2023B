@@ -107,6 +107,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="2d\ImGuiManager.cpp" />
+    <ClCompile Include="Balloon.cpp" />
     <ClCompile Include="base\DirectXCommon.cpp" />
     <ClCompile Include="base\WinApp.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
@@ -115,7 +116,10 @@
     <ClCompile Include="Mymath.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerBullet.cpp" />
+    <ClCompile Include="scene\GameClear.cpp" />
     <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="scene\Guide.cpp" />
+    <ClCompile Include="scene\Title.cpp" />
     <ClCompile Include="Skydome.cpp" />
     <ClCompile Include="WorldTransformEx.cpp" />
   </ItemGroup>
@@ -139,6 +143,7 @@
     <ClInclude Include="3d\ViewProjection.h" />
     <ClInclude Include="3d\WorldTransform.h" />
     <ClInclude Include="audio\Audio.h" />
+    <ClInclude Include="Balloon.h" />
     <ClInclude Include="base\DirectXCommon.h" />
     <ClInclude Include="base\SafeDelete.h" />
     <ClInclude Include="base\StringUtility.h" />
@@ -154,7 +159,10 @@
     <ClInclude Include="Mymath.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBullet.h" />
+    <ClInclude Include="scene\GameClear.h" />
     <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="scene\Guide.h" />
+    <ClInclude Include="scene\Title.h" />
     <ClInclude Include="Skydome.h" />
   </ItemGroup>
   <ItemGroup>
