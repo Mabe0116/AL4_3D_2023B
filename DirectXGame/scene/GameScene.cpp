@@ -1,14 +1,14 @@
 #include "GameScene.h"
+#include "ImGuiManager.h"
 #include "Mymath.h"
 #include "TextureManager.h"
-#include "ImGuiManager.h"
 #include <cassert>
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() { 
+GameScene::~GameScene() {
 	delete ModelPlayerBullet_;
-	
+
 	for (Balloon* it : balloon_) {
 		delete it;
 	}
@@ -33,9 +33,7 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	player_->Initialize(
 	    modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(),
-	    modelFighterR_arm_.get(),ModelPlayerBullet_);
-
-
+	    modelFighterR_arm_.get(), ModelPlayerBullet_);
 
 	// Skydome
 	modelskydome_ = Model::CreateFromOBJ("skydome", true);
@@ -52,18 +50,10 @@ void GameScene::Initialize() {
 	followcamera_->SetTarget(&player_->GetWorldTransform());
 
 	std::random_device seedGenerator;
-	randomEngine = std::mt19937(seedGenerator);
-	 
-	for (uint32_t i = 0; i < 3; ++i)
-	{
-		Balloon* newBalloon = new Balloon();
-		Vector3 position;
-		std::uniform_real_distribution<float> distribution(-50.0f, 50.0f);
-		position.x = distribution(randomEngine);
-		position.y = 0.0f;
-		position.z = distribution(randomEngine);
-		newBalloon->Initialize(balloon, 0, position);
-		balloon_.push_back(newBalloon);
+	randomEngine = std::mt19937(seedGenerator());
+
+	for (int i = 0; i < kStartBalloonCount; ++i) {
+		AddBalloon();
 	}
 }
 
@@ -82,27 +72,30 @@ void GameScene::Update() {
 		return false;
 	});
 
-	//風船
+	if (++balloonSpawnTimer_ > kBalloonSpawnTime) {
+		balloonSpawnTimer_ = 0;
+		AddBalloon();
+	}
+
+	// 風船
 	for (Balloon* it : balloon_) {
 		it->Update();
 	}
 
 	CheckAllCollision();
 
-
 	viewprojection_.matView = followcamera_->GetViewProjection().matView;
 
 	viewprojection_.matProjection = followcamera_->GetViewProjection().matProjection;
 	viewprojection_.TransferMatrix();
 
-	if (hitCount_ >= 3)
-	{
+	if (hitCount_ >= kClearBalloonCount) {
 		ChangeScene = true;
 	}
 
-	ImGui::Begin("GameScene");
-	ImGui::Text("HitCount : %d", hitCount_);
-	ImGui::End();
+	// ImGui::Begin("GameScene");
+	// ImGui::Text("HitCount : %d", hitCount_);
+	// ImGui::End();
 }
 
 void GameScene::Draw() {
@@ -160,7 +153,6 @@ void GameScene::Draw() {
 #pragma endregion
 }
 
-
 void GameScene::CheckAllCollision() {
 
 	// 判定対象AとBの座標
@@ -193,19 +185,30 @@ void GameScene::CheckAllCollision() {
 	}
 }
 
-void GameScene::Reset() { 
-	ChangeScene = false; 
+void GameScene::Reset() {
+	ChangeScene = false;
 	hitCount_ = 0;
-	for (Balloon* it : balloon_)
-	{
+
+	for (Balloon* it : balloon_) {
 		delete it;
 	}
 
 	balloon_.clear();
 	player_->Reset();
-	for (uint32_t i = 0; i < 3; ++i) {
-		Balloon* newBalloon = new Balloon();
-		newBalloon->Initialize(balloon, 0, {i * 10.0f, 0.0f, 0.0f});
-		balloon_.push_back(newBalloon);
+
+	for (int i = 0; i < kStartBalloonCount; ++i) {
+		AddBalloon();
 	}
+}
+
+void GameScene::AddBalloon() {
+	Balloon* newBalloon = new Balloon();
+	Vector3 position = {GetRandomFloat(minX, maxX), 0.0f, GetRandomFloat(minZ, maxZ)};
+	newBalloon->Initialize(balloon, 0, position);
+	balloon_.push_back(newBalloon);
+}
+
+float GameScene::GetRandomFloat(float min, float max) {
+	std::uniform_real_distribution<float> distribution(min, max);
+	return distribution(randomEngine);
 }

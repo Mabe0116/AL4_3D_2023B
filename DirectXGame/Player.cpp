@@ -202,12 +202,12 @@ void Player::UpdateFloatingGimmick() {
 	worldTransformR_arm_.translation_.z =
 		std::sin(floatingParameter_) * -floatingAmplitude;
 
-	ImGui::Begin("Player");
-	ImGui::SliderFloat3("Body Translation", &worldTransformBody_.translation_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat3("Head Translation", &worldTransformHead_.translation_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat3("ArmL Translation", &worldTransformL_arm_.translation_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat3("ArmR Translation", &worldTransformR_arm_.translation_.x, -10.0f, 10.0f);
-	ImGui::End();
+	//ImGui::Begin("Player");
+	//ImGui::SliderFloat3("Body Translation", &worldTransformBody_.translation_.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat3("Head Translation", &worldTransformHead_.translation_.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat3("ArmL Translation", &worldTransformL_arm_.translation_.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat3("ArmR Translation", &worldTransformR_arm_.translation_.x, -10.0f, 10.0f);
+	//ImGui::End();
 
 
 }

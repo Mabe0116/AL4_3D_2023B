@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Audio.h"
+#include "Balloon.h"
 #include "DirectXCommon.h"
 #include "FollowCamera.h"
 #include "Input.h"
 #include "Model.h"
 #include "Player.h"
-#include "Balloon.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -46,13 +46,15 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
-	void AddEnemy(Vector3 pos);
+	void AddBalloon();
 
 	void CheckAllCollision();
 
 	bool GetChangeScene() { return ChangeScene; };
 
 	void Reset();
+
+	float GetRandomFloat(float min, float max);
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -89,14 +91,22 @@ private: // メンバ変数
 
 	std::unique_ptr<FollowCamera> followcamera_ = nullptr;
 
-	
 	bool ChangeScene = false;
 	int32_t NextScene = 0;
 
-
 	uint32_t textureHandle_;
 
-	uint32_t hitCount_ = 0;
-
 	std::mt19937 randomEngine;
+
+	const int kStartBalloonCount = 3;
+	const int kClearBalloonCount = 20;
+	int hitCount_ = 0;
+
+	const int kBalloonSpawnTime = 60 * 2;
+	int balloonSpawnTimer_ = 0;
+
+	float minX = -50.0f;
+	float maxX = 50.0f;
+	float minZ = 0.0f;
+	float maxZ = 50.0f;
 };
