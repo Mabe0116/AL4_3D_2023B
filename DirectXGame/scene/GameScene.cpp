@@ -16,14 +16,29 @@ void GameScene::Initialize() {
 	modelFighterHead_.reset(Model::CreateFromOBJ("float_Head"));
 	modelFighterL_arm_.reset(Model::CreateFromOBJ("float_L_arm"));
 	modelFighterR_arm_.reset(Model::CreateFromOBJ("float_R_arm"));
+
+	enemyModelBody_.reset(Model::CreateFromOBJ("needle_Body"));
+	enemyModelL_arm_.reset(Model::CreateFromOBJ("needle_L_arm"));
+	enemyModelR_arm_.reset(Model::CreateFromOBJ("needle_R_arm"));
+
 	viewprojection_.Initialize();
 	viewprojection_.farZ = 1400.0f;
 	viewprojection_.translation_.y = 5.0f;
 	textureHandle_ = TextureManager::Load("cube/cube.jpg");
+	//自機
 	player_ = std::make_unique<Player>();
-	player_->Initialize(
+	std::vector<Model*> playerModels = {
 	    modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(),
-	    modelFighterR_arm_.get());
+	    modelFighterR_arm_.get()};
+	player_->Initialize(playerModels);
+
+	//敵
+	enemy_ = std::make_unique<Enemy>();
+	std::vector<Model*> enemyModels = {
+	    enemyModelBody_.get(), enemyModelL_arm_.get(), enemyModelR_arm_.get()};
+	enemy_->Initialize(enemyModels);
+
+
 	// Skydome
 	modelskydome_ = Model::CreateFromOBJ("skydome", true);
 	skydome_ = std::make_unique<Skydome>();
@@ -41,6 +56,7 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 	player_->Update();
+	enemy_->Update();
 	skydome_->Update();
 	ground_->Update();
 	followcamera_->Update();
@@ -77,6 +93,8 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	player_->Draw(viewprojection_);
+
+	enemy_->Draw(viewprojection_);
 
 	skydome_->Draw(viewprojection_);
 

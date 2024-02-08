@@ -28,29 +28,25 @@ Matrix4x4 MakeRotateXMatrix(float radian) {
 	return result;
 }
 
-void Player::Initialize(Model* modelBody,Model* modelHead, Model* modelL_arm, Model* modelR_arm) {
-	assert(modelBody);
-	/*model_ = model;*/
+void Player::Initialize(const std::vector<Model*>& models) {
+	
 	worldTransform_.Initialize();
 	worldTransformBody_.Initialize();
 	worldTransformHead_.Initialize();
 	worldTransformL_arm_.Initialize();
 	worldTransformR_arm_.Initialize();
 
+	//基底クラスの初期化
+	BaseCharacter::Initialize(models);
+
 	worldTransformHead_.translation_ = {0.0f, 1.4f, 0.0f};
 	worldTransformL_arm_.translation_ = {-0.5f, 1.1f, 0.0f};
 	worldTransformR_arm_.translation_ = {0.5f, 1.1f, 0.0f};
-
-	modelFighterBody_ = modelBody;
-	modelFighterHead_ = modelHead;
-	modelFighterL_arm_ = modelL_arm;
-	modelFighterR_arm_ = modelR_arm;
 
 	worldTransformBody_.parent_ = &worldTransform_;
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformL_arm_.parent_ = &worldTransformBody_;
 	worldTransformR_arm_.parent_ = &worldTransformBody_;
-
 
 	/*textureHandle_ = textureHandle;*/
 	input_ = Input::GetInstance();
@@ -61,6 +57,8 @@ void Player::Update() {
 	//行列の更新
 	worldTransform_.UpdateMatrix();
 
+	//行列の更新
+	BaseCharacter::Update();
 	worldTransformBody_.UpdateMatrix();
 	worldTransformHead_.UpdateMatrix();
 	worldTransformL_arm_.UpdateMatrix();
@@ -72,10 +70,10 @@ void Player::Update() {
 };
 
 void Player::Draw(const ViewProjection& viewProjection) {
-	modelFighterBody_->Draw(worldTransformBody_, viewProjection);
-	modelFighterHead_->Draw(worldTransformHead_, viewProjection);
-	modelFighterL_arm_->Draw(worldTransformL_arm_, viewProjection);
-	modelFighterR_arm_->Draw(worldTransformR_arm_, viewProjection);
+	models_[0]->Draw(worldTransformBody_, viewProjection);
+	models_[1]->Draw(worldTransformHead_, viewProjection);
+	models_[2]->Draw(worldTransformL_arm_, viewProjection);
+	models_[3]->Draw(worldTransformR_arm_, viewProjection);
 }
 
 void Player::Move(){

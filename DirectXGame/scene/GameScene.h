@@ -6,12 +6,14 @@
 #include "Input.h"
 #include "Model.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
 #include <Ground.h>
 #include <Skydome.h>
 #include <memory>
+
 
 /// <summary>
 /// ゲームシーン
@@ -63,12 +65,18 @@ private: // メンバ変数
 	ViewProjection viewprojection_;
 	std::unique_ptr<Model> model_ = nullptr;
 	std::unique_ptr<Player> player_ = nullptr;
+	std::unique_ptr<Enemy> enemy_ = nullptr;
 
 	// 3dモデル
 	std::unique_ptr<Model> modelFighterBody_;
 	std::unique_ptr<Model> modelFighterHead_;
 	std::unique_ptr<Model> modelFighterL_arm_;
 	std::unique_ptr<Model> modelFighterR_arm_;
+
+	std::unique_ptr<Model> enemyModelBody_;
+	std::unique_ptr<Model> enemyModelL_arm_;
+	std::unique_ptr<Model> enemyModelR_arm_;
+
 
 	std::unique_ptr<FollowCamera> followcamera_ = nullptr;
 
