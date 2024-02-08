@@ -21,7 +21,7 @@
 
 namespace {
 
-const char* sVersionString = "20231013";
+const char* sVersionString = "20231201";
 
 std::wstring GetResourceRoot() {
 	static const std::wstring kResourceRoot = L"./NoviceResources/";
