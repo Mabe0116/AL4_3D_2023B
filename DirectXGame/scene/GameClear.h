@@ -4,7 +4,7 @@
 #include "DirectXCommon.h"
 #include "Input.h"
 #include "Model.h"
-//#include "SafeDelete.h"
+// #include "SafeDelete.h"
 #include "Sprite.h"
 #include "ViewProjection.h"
 #include "WorldTransform.h"
@@ -42,7 +42,11 @@ public: // メンバ関数
 
 	bool GetChangeScene() { return ChangeScene; };
 
-	void Reset() { ChangeScene = false; };
+	void Reset() {
+		ChangeScene = false;
+		isFadeIn_ = false;
+		isFadeOut_ = true;
+	};
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
@@ -55,4 +59,10 @@ private: // メンバ変数
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+
+	// トランジション用のスプライト
+	std::unique_ptr<Sprite> transitionSprite_ = nullptr;
+	Vector4 transitionSpriteColor_ = {0.0f, 0.0f, 0.0f, 1.0f};
+	bool isFadeIn_ = false;
+	bool isFadeOut_ = true;
 };

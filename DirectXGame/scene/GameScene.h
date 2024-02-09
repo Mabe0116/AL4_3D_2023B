@@ -109,4 +109,10 @@ private: // メンバ変数
 	float maxX = 50.0f;
 	float minZ = 0.0f;
 	float maxZ = 50.0f;
+
+	// トランジション用のスプライト
+	std::unique_ptr<Sprite> transitionSprite_ = nullptr;
+	Vector4 transitionSpriteColor_ = {0.0f, 0.0f, 0.0f, 1.0f};
+	bool isFadeIn_ = false;
+	bool isFadeOut_ = true;
 };

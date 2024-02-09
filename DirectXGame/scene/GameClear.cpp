@@ -13,6 +13,10 @@ void GameClear::Initialize() {
 	audio_ = Audio::GetInstance();
 	TextureHandle_ = TextureManager::Load("UI/GameClear.png");
 	sprite_ = Sprite::Create(TextureHandle_, {0, 0});
+
+	// トランジション用のスプライト
+	transitionSprite_.reset(Sprite::Create(0, {0.0f, 0.0f}));
+	transitionSprite_->SetSize({1280.0f, 720.0f});
 }
 
 void GameClear::Update() {
@@ -20,11 +24,34 @@ void GameClear::Update() {
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+		if (!isFadeIn_ && !isFadeOut_) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
 
+				isFadeIn_ = true;
+			}
+		}
+	}
+
+	// FadeInの処理
+	if (isFadeIn_) {
+		transitionSpriteColor_.w += 0.1f;
+		if (transitionSpriteColor_.w > 1.0f) {
+			transitionSpriteColor_.w = 1.0f;
+			isFadeIn_ = false;
 			ChangeScene = true;
 		}
 	}
+
+	// FadeOutの処理
+	if (isFadeOut_) {
+		transitionSpriteColor_.w -= 0.1f;
+		if (transitionSpriteColor_.w < 0.0f) {
+			transitionSpriteColor_.w = 0.0f;
+			isFadeOut_ = false;
+		}
+	}
+
+	transitionSprite_->SetColor(transitionSpriteColor_);
 }
 
 void GameClear::Draw() {
@@ -63,6 +90,8 @@ void GameClear::Draw() {
 	Sprite::PreDraw(commandList);
 
 	sprite_->Draw();
+
+	transitionSprite_->Draw();
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる

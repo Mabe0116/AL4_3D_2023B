@@ -12,17 +12,43 @@ void Guide::Initialize() {
 	audio_ = Audio::GetInstance();
 	TextureHandle_ = TextureManager::Load("UI/Guide.png");
 	sprite_ = Sprite::Create(TextureHandle_, {0, 0});
+
+	// トランジション用のスプライト
+	transitionSprite_.reset(Sprite::Create(0, {0.0f, 0.0f}));
+	transitionSprite_->SetSize({1280.0f, 720.0f});
 }
 
 void Guide::Update() {
 	XINPUT_STATE joyState;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if (!isFadeIn_ && !isFadeOut_) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+				isFadeIn_ = true;
+			}
+		}
+	}
 
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_A) {
+	// FadeInの処理
+	if (isFadeIn_) {
+		transitionSpriteColor_.w += 0.1f;
+		if (transitionSpriteColor_.w > 1.0f) {
+			transitionSpriteColor_.w = 1.0f;
+			isFadeIn_ = false;
 			ChangeScene = true;
 		}
 	}
+
+	// FadeOutの処理
+	if (isFadeOut_) {
+		transitionSpriteColor_.w -= 0.1f;
+		if (transitionSpriteColor_.w < 0.0f) {
+			transitionSpriteColor_.w = 0.0f;
+			isFadeOut_ = false;
+		}
+	}
+
+	transitionSprite_->SetColor(transitionSpriteColor_);
 }
 
 void Guide::Draw() {
@@ -65,6 +91,8 @@ void Guide::Draw() {
 	/// </summary>
 
 	sprite_->Draw();
+
+	transitionSprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();

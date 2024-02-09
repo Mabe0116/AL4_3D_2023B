@@ -55,6 +55,10 @@ void GameScene::Initialize() {
 	for (int i = 0; i < kStartBalloonCount; ++i) {
 		AddBalloon();
 	}
+
+	// トランジション用のスプライト
+	transitionSprite_.reset(Sprite::Create(0, {0.0f, 0.0f}));
+	transitionSprite_->SetSize({1280.0f, 720.0f});
 }
 
 void GameScene::Update() {
@@ -90,8 +94,29 @@ void GameScene::Update() {
 	viewprojection_.TransferMatrix();
 
 	if (hitCount_ >= kClearBalloonCount) {
-		ChangeScene = true;
+		isFadeIn_ = true;
 	}
+
+	// FadeInの処理
+	if (isFadeIn_) {
+		transitionSpriteColor_.w += 0.1f;
+		if (transitionSpriteColor_.w > 1.0f) {
+			transitionSpriteColor_.w = 1.0f;
+			isFadeIn_ = false;
+			ChangeScene = true;
+		}
+	}
+
+	// FadeOutの処理
+	if (isFadeOut_) {
+		transitionSpriteColor_.w -= 0.1f;
+		if (transitionSpriteColor_.w < 0.0f) {
+			transitionSpriteColor_.w = 0.0f;
+			isFadeOut_ = false;
+		}
+	}
+
+	transitionSprite_->SetColor(transitionSpriteColor_);
 
 	// ImGui::Begin("GameScene");
 	// ImGui::Text("HitCount : %d", hitCount_);
@@ -142,6 +167,8 @@ void GameScene::Draw() {
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(commandList);
+
+	transitionSprite_->Draw();
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
@@ -199,6 +226,9 @@ void GameScene::Reset() {
 	for (int i = 0; i < kStartBalloonCount; ++i) {
 		AddBalloon();
 	}
+
+	isFadeIn_ = false;
+	isFadeOut_ = true;
 }
 
 void GameScene::AddBalloon() {
