@@ -21,6 +21,8 @@ void GameScene::Initialize() {
 	enemyModelL_arm_.reset(Model::CreateFromOBJ("needle_L_arm"));
 	enemyModelR_arm_.reset(Model::CreateFromOBJ("needle_R_arm"));
 
+    modelHammer_.reset(Model::CreateFromOBJ("hammer"));
+
 	viewprojection_.Initialize();
 	viewprojection_.farZ = 1400.0f;
 	viewprojection_.translation_.y = 5.0f;
@@ -29,7 +31,7 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	std::vector<Model*> playerModels = {
 	    modelFighterBody_.get(), modelFighterHead_.get(), modelFighterL_arm_.get(),
-	    modelFighterR_arm_.get()};
+	    modelFighterR_arm_.get(),modelHammer_.get()};
 	player_->Initialize(playerModels);
 
 	//敵

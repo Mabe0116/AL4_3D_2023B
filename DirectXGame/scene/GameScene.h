@@ -77,6 +77,8 @@ private: // メンバ変数
 	std::unique_ptr<Model> enemyModelL_arm_;
 	std::unique_ptr<Model> enemyModelR_arm_;
 
+	std::unique_ptr<Model> modelHammer_;
+
 
 	std::unique_ptr<FollowCamera> followcamera_ = nullptr;
 

@@ -340,3 +340,9 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 
 	return result;
 }
+
+float EaseInBack(float x) { 
+	const float c1 = 1.70158f;
+	const float c3 = c1 + 1.0f;
+	return c3 * x * x * x - c1 * x * x;
+}

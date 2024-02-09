@@ -34,3 +34,5 @@ Matrix4x4 MakeViewportMatrix(
 Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 
 Matrix4x4 MakeRotateYMatrix(float radian);
+
+float EaseInBack(float x);

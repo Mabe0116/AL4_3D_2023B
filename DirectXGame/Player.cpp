@@ -2,6 +2,7 @@
 #include <cassert>
 #include "Mymath.h"
 #include "ImGuiManager.h"
+#include "../External/imgui/imgui.h"
 
 Matrix4x4 MakeRotateXMatrix(float radian) {
 	Matrix4x4 result;
@@ -35,6 +36,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformHead_.Initialize();
 	worldTransformL_arm_.Initialize();
 	worldTransformR_arm_.Initialize();
+	worldTransformHammer_.Initialize();
 
 	//基底クラスの初期化
 	BaseCharacter::Initialize(models);
@@ -47,6 +49,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformHead_.parent_ = &worldTransformBody_;
 	worldTransformL_arm_.parent_ = &worldTransformBody_;
 	worldTransformR_arm_.parent_ = &worldTransformBody_;
+	worldTransformHammer_.parent_ = &worldTransformBody_;
 
 	/*textureHandle_ = textureHandle;*/
 	input_ = Input::GetInstance();
@@ -54,6 +57,31 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 void Player::Update() {
 	worldTransform_.TransferMatrix();
+
+	if (behaviorRequest_) {
+		behavior_ = behaviorRequest_.value();
+		switch(behavior_) { 
+			case Behavior::kRoot:
+		default:
+			    BehaviorRootInitialize();
+			    break;
+		case Behavior::kAttack:
+			    BehaviorAttackInitialize();
+			    break;
+		}
+		behaviorRequest_ = std::nullopt;
+	}
+
+	switch (behavior_) { 
+		case Behavior::kRoot:
+	default:
+		BehaviorRootUpdate();
+		break;
+	case Behavior::kAttack:
+		BehaviorAttackUpdate();
+		break;
+	}
+
 	//行列の更新
 	worldTransform_.UpdateMatrix();
 
@@ -63,10 +91,10 @@ void Player::Update() {
 	worldTransformHead_.UpdateMatrix();
 	worldTransformL_arm_.UpdateMatrix();
 	worldTransformR_arm_.UpdateMatrix();
+	worldTransformHammer_.UpdateMatrix();
 
-	UpdateFloatingGimmick();
 
-	Move();
+
 };
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -74,7 +102,48 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	models_[1]->Draw(worldTransformHead_, viewProjection);
 	models_[2]->Draw(worldTransformL_arm_, viewProjection);
 	models_[3]->Draw(worldTransformR_arm_, viewProjection);
+	models_[4]->Draw(worldTransformHammer_, viewProjection);
 }
+
+void Player::BehaviorRootUpdate() {
+
+	Move(); 
+	UpdateFloatingGimmick();
+
+	// ゲームパッドの状態を得る変数
+	XINPUT_STATE joyState;
+
+	// ジョイスティック状態取得
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+			    behaviorRequest_ = Behavior::kAttack;
+		}
+	}
+
+}
+
+void Player::BehaviorAttackUpdate() {
+	const float kDegreeToRadian = 3.14f / 180.0f;
+	attack_.time++;
+	if (attack_.time <= attack_.kAnimMaxTime) {
+		float frame = (float)(attack_.time / attack_.kAnimMaxTime);
+		float easeInBack = EaseInBack(frame * frame);
+		float weaponAngle = (float)((90 * kDegreeToRadian)) * easeInBack;
+		float armAngle = (float)((120 * kDegreeToRadian)) * easeInBack;
+		worldTransformHammer_.rotation_.x = weaponAngle;
+		worldTransformL_arm_.rotation_.x = armAngle + 3.14f;
+		worldTransformR_arm_.rotation_.x = armAngle + 3.14f;
+
+ 	} else if (attack_.time >= attack_.kAttakAllFrame) {
+		attack_.time = 0;
+		behaviorRequest_ = Behavior::kRoot;
+	}
+}
+
+void Player::BehaviorRootInitialize() {}
+
+void Player::BehaviorAttackInitialize() {}
+
 
 void Player::Move(){
 	// キャラクターの移動ベクトル
@@ -146,12 +215,13 @@ void Player::UpdateFloatingGimmick() {
 	worldTransformR_arm_.translation_.z =
 		std::sin(floatingParameter_) * -floatingAmplitude;
 
-	ImGui::Begin("Player");
-	ImGui::SliderFloat3("Body Translation", &worldTransformBody_.translation_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat3("Head Translation", &worldTransformHead_.translation_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat3("ArmL Translation", &worldTransformL_arm_.translation_.x, -10.0f, 10.0f);
-	ImGui::SliderFloat3("ArmR Translation", &worldTransformR_arm_.translation_.x, -10.0f, 10.0f);
-	ImGui::End();
+	//ImGui::Begin("Player");
+	//ImGui::SliderFloat3("Body Translation", &worldTransformBody_.translation_.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat3("Head Translation", &worldTransformHead_.translation_.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat3("ArmL Translation", &worldTransformL_arm_.translation_.x, -10.0f, 10.0f);
+	//ImGui::SliderFloat3("ArmR Translation", &worldTransformR_arm_.translation_.x, -10.0f, 10.0f);
+	//ImGui::End();
 
 
 }
+
