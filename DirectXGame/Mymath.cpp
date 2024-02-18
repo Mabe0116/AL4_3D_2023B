@@ -316,7 +316,7 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	return result;
 }
 
-Matrix4x4 MakeRotateYMatrix(float radian) {
+Matrix4x4 MakeRotateYMatrix(const float radian) {
 	Matrix4x4 result;
 	result.m[0][0] = std::cos(radian);
 	result.m[0][1] = 0;
@@ -339,4 +339,12 @@ Matrix4x4 MakeRotateYMatrix(float radian) {
 	result.m[3][3] = 1;
 
 	return result;
+}
+
+//イージング
+float easeOutBack(float x) {
+	const float c1 = 1.70158f;
+	const float c3 = c1 + 1.0f;
+
+	return 1.0f + c3 * pow(x - 1.0f, 3.0f) + c1 * pow(x - 1.0f, 2.0f);
 }

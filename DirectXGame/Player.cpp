@@ -88,23 +88,24 @@ void Player::Update() {
 		return false;
 	});
 
-	// キャラクターの移動ベクトル
-	Vector3 move = {0, 0, 0};
+	//// キャラクターの移動ベクトル
+	//Vector3 move = {0, 0, 0};
 
-	// キャラクターの移動の速さ
-	const float kCharacterSpeed = 0.2f;
+	//// キャラクターの移動の速さ
+	//const float kCharacterSpeed = 0.2f;
 
-	// ゲームパッドの状態を得る変数
-	XINPUT_STATE joyState;
+	//// ゲームパッドの状態を得る変数
+	//XINPUT_STATE joyState;
 
-	// ゲームパッド状態取得
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+	//// ゲームパッド状態取得
+	//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 
-		move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
+	//	move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
 
-		move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
-	}
+	//	move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+	//}
 
+	
 	UpdateFloatingGimmick();
 
 	Move();
@@ -150,6 +151,16 @@ void Player::Move(){
 		move.y = 0.0f;
 		move.z = (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
 
+		move = Normalize(move);
+
+		move.x *= kCharacterSpeed;
+		move.y *= kCharacterSpeed;
+		move.z *= kCharacterSpeed;
+		Matrix4x4 rotateMatrix = MakeRotateYMatrix(viewProjection_->rotation_.y);
+
+		move = TransformNormal(move, rotateMatrix);
+
+		worldTransform_.rotation_.y = std::atan2(move.x, move.z);
 
 		//移動
 		Add(worldTransform_.translation_, move);

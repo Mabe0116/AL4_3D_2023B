@@ -49,6 +49,8 @@ void GameScene::Initialize() {
 	followcamera_->Initialize();
 	followcamera_->SetTarget(&player_->GetWorldTransform());
 
+	player_->SetViewProjection(&followcamera_->GetViewProjection());
+
 	std::random_device seedGenerator;
 	randomEngine = std::mt19937(seedGenerator());
 

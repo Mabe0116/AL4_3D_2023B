@@ -53,12 +53,22 @@ private: // メンバ変数
 	Input* input_ = nullptr;
 	Audio* audio_ = nullptr;
 	Sprite* sprite_ = nullptr;
+	Sprite* sprite1_ = nullptr;
 	uint32_t TextureHandle_ = 0;
+	uint32_t TextureHandle1_ = 0;
 	bool ChangeScene = false;
 	int32_t NextScene = 0;
 	/// <summary>
 	/// ゲームシーン用
 	/// </summary>
+	
+	Vector2 position_ = {0, 0};
+
+	float easingParameter = 0.0f;
+
+	float startPosition = 0.0f;
+
+	float endPosition = 100.0f;
 
 	// トランジション用のスプライト
 	std::unique_ptr<Sprite> transitionSprite_ = nullptr;

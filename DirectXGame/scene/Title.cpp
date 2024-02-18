@@ -1,6 +1,7 @@
 #include "Title.h"
 #include "TextureManager.h"
 #include <cassert>
+#include <Mymath.h>
 
 Title::Title() {}
 
@@ -12,7 +13,9 @@ void Title::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 	TextureHandle_ = TextureManager::Load("UI/Title.png");
+	TextureHandle1_ = TextureManager::Load("UI/Title1.png");
 	sprite_ = Sprite::Create(TextureHandle_, {0, 0});
+	sprite1_ = Sprite::Create(TextureHandle1_, {0, 0});
 
 	// トランジション用のスプライト
 	transitionSprite_.reset(Sprite::Create(0, {0.0f, 0.0f}));
@@ -35,6 +38,27 @@ void Title::Update() {
 			}
 		}
 	}
+
+	easingParameter += 1.0f / 60.0f;
+
+
+	if (easingParameter > 1.0f) {
+		easingParameter = 0.0f;
+
+		if (startPosition == 0.0f) {
+			startPosition = 100.0f;
+			endPosition = 0.0f;
+		} else {
+			startPosition = 0.0f;
+			endPosition = 100.0f;
+		}
+
+	}
+
+	position_.y = startPosition + (endPosition - startPosition) * easeOutBack(easingParameter);
+
+	sprite1_->SetPosition(position_);
+
 
 	// FadeInの処理
 	if (isFadeIn_) {
@@ -98,6 +122,7 @@ void Title::Draw() {
 	/// </summary>
 
 	sprite_->Draw();
+	sprite1_->Draw();
 
 	transitionSprite_->Draw();
 

@@ -2,6 +2,7 @@
 #include "Input.h"
 #include "Model.h"
 #include "WorldTransform.h"
+#include "ViewProjection.h"
 #include "PlayerBullet.h"
 
 class Player {
@@ -23,6 +24,11 @@ public:
 	void InitializeFloatingGimmick();
 
 	void UpdateFloatingGimmick();
+
+	void SetViewProjection(const ViewProjection* viewProjection) {
+		viewProjection_ = viewProjection;
+	}
+
 
 	void Reset();
 
@@ -48,6 +54,9 @@ private:
 	uint32_t textureHandle_;
 	Input* input_ = nullptr;
 
+	const ViewProjection* viewProjection_ = nullptr;
+
+	
 	// 弾
 	std::list<PlayerBullet*> bullets_;
 
